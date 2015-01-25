@@ -3,16 +3,15 @@ install.packages("rmarkdown")
 library(rvest)
 library(rmarkdown)
 
-find <- "iPhone"
+find <- "iPhone" # eg tv, 
 localCraiglist <- "cincinnati" # eg cincinnati, sfbay etc
 
 ppa <- sprintf("https://%s.craigslist.org/search/moa?query=%s",localCraiglist ,find)
 
 
 #looking for iPhones
-baseURL <- 
-baseURL <- paste("https://cincinnati.craigslist.org/search/moa?query=",find,sep = "")
-n_of_page <- 3
+baseURL <- ppa
+n_of_page <- 5
 urlVector <- NULL
 urlVector[1] <- baseURL
 
@@ -81,12 +80,16 @@ pattern3 <- "(?<=\\()(.*?)(?=\\))"
 o <- gregexpr(pattern3, price_location, perl = TRUE)
 location <- regmatches(price_location, o)
 
-#adding NA's where it is missing
+#adding NA's where character(0) is thrown as output
 location[sapply(location, function(x){identical(x, character(0)) })] <- NA
 
 location <- unlist(location)
 
 outputTable <- data.frame(id, title, price, location )
+file = "D://file.csv"
+
+#if (file.exists(file)) file.remove(file)
+write.csv(outputTable, file = "D://file.csv")
 
 'inspired from 
 http://blog.rstudio.org/2014/11/24/rvest-easy-web-scraping-with-r/'
