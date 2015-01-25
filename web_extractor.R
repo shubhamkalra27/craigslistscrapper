@@ -3,8 +3,15 @@ install.packages("rmarkdown")
 library(rvest)
 library(rmarkdown)
 
+find <- "iPhone"
+localCraiglist <- "cincinnati" # eg cincinnati, sfbay etc
+
+ppa <- sprintf("https://%s.craigslist.org/search/moa?query=%s",localCraiglist ,find)
+
+
 #looking for iPhones
-baseURL <- "https://cincinnati.craigslist.org/search/moa?query=iphone"
+baseURL <- 
+baseURL <- paste("https://cincinnati.craigslist.org/search/moa?query=",find,sep = "")
 n_of_page <- 3
 urlVector <- NULL
 urlVector[1] <- baseURL
