@@ -1,4 +1,7 @@
-# craigslistscrapper
+# Craigslist Scrapper
+## Scrap data easily to your excel sheet
+
+
 craigslistscrapper that puts your search results in an excel sheet. 
 
 Idea is that i look for iPhone above $300 and it gives me in an Excel sheet the values of all the postings in my city.   
