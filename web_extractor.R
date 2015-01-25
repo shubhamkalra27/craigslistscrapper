@@ -9,6 +9,7 @@ n_of_page <- 3
 urlVector <- NULL
 urlVector[1] <- baseURL
 
+#gathering all the URLs
 if (n_of_page > 2){
   for (i in 2:n_of_page ) {
     s <- html_session( urlVector[i-1])
@@ -18,6 +19,8 @@ if (n_of_page > 2){
   }
 }
 urlVector
+
+#scraping data of the web. 
 id <- NULL ; title <- NULL; price_location <- NULL;
 for(i in 1:length(urlVector)){ 
   urlVector[i]
@@ -49,87 +52,37 @@ for(i in 1:length(urlVector)){
   
 }
 
-outputTable <- data.frame(id, title, price_location )
-
-outputTable$price_location
-
+'clearing out price and location from proce_location'
 #write.csv(outputTable, file = "D://file.csv")
 
-grepl(pattern ='\\$\\d+\\s+',"  $300   (wyoming)   pic map  cell phones - by owner")
-
-regmatches("h", "hello", invert = TRUE)
-
-
-x <- c("$215   (Buttermilk)   pic  cell phones - by owner",
-       "$300   (wyoming)   pic map  cell phones - by owner",
-       "   (Northern Kentucky)     cell phones - by owner"
-)
+# 1. Price
 pattern <- "\\$\\d+"
 
-m <- regexec(pattern, x)
-valuewithdollar <- regmatches(x, m)
+m <- gregexpr(pattern, price_location)
+valuewithdollar <- regmatches(price_location, m)
 
-valuewithdollar == character(0)
+valuewithdollar[sapply(valuewithdollar, function(x){identical(x, character(0)) })] <- NA
 
-unlist(valuewithdollar)
-valuewithdollar[[3]] <- NA
-
-a <- valuewithdollar
-
-a[sapply(a, is.null)] <- NA
-unlist(a)
+valuewithdollar <- unlist(valuewithdollar)
 
 pattern2 <- ("\\d+$")
-n <- regexec(pattern2, valuewithdollar)
-ValueNumeric <- as.numeric(regmatches(valuewithdollar, n), na.rm = TRUE)
+n <- gregexpr(pattern2, valuewithdollar)
+price <- as.numeric(regmatches(valuewithdollar, n), na.rm = TRUE)
 
-###############
+#2 location
+pattern3 <- "(?<=\\()(.*?)(?=\\))"
+o <- gregexpr(pattern3, price_location, perl = TRUE)
+location <- regmatches(price_location, o)
 
+#adding NA's where it is missing
+location[sapply(location, function(x){identical(x, character(0)) })] <- NA
 
+location <- unlist(location)
 
+outputTable <- data.frame(id, title, price, location )
 
-url <- html("https://cincinnati.craigslist.org/search/moa?query=iphone")
-
-
-content <- url %>%
-  html_nodes(".content")
-
-id <- id + content %>%
-  html_nodes(".row") %>%
-  html_attr("data-pid")
-
-title <- title + content %>%
-  html_nodes(".row .hdrlnk") %>%
-  html_text()
-
-rows <-  content %>%
-  html_nodes(".row")
-
-price_location <- price_location + rows %>%
-  html_node(".l2") %>%
-  html_text()  
-
-iphoneTable <- data.frame(id, title,price_location )
-
-iphoneTable$price_location[95]
-names(iphoneTable)
-str(iphoneTable)
-
-iphoneTable$price_location
-
-for (i in 1:nrow(iphoneTable) ) {
-  text <- iphoneTable$price_location[i] 
-  gsub(text, "$")
-}
-
-
-grepl("d+",iphoneTable$price_location[100] , perl=TRUE)
-
-grepl("a", c("abc", "def", "cba a", "aa"), perl=TRUE)
-
-' inspired from 
+'inspired from 
 http://blog.rstudio.org/2014/11/24/rvest-easy-web-scraping-with-r/'
-
 
 
 
