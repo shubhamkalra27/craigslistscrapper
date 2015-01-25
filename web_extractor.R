@@ -3,15 +3,15 @@ install.packages("rmarkdown")
 library(rvest)
 library(rmarkdown)
 
+#looking for iPhones
 find <- "iPhone" # eg tv, 
 localCraiglist <- "cincinnati" # eg cincinnati, sfbay etc
+n_of_page <- 5   # each page has 100 entries. 
+  
+baseURL <- sprintf("https://%s.craigslist.org/search/moa?query=%s",localCraiglist ,find)
 
-ppa <- sprintf("https://%s.craigslist.org/search/moa?query=%s",localCraiglist ,find)
 
 
-#looking for iPhones
-baseURL <- ppa
-n_of_page <- 5
 urlVector <- NULL
 urlVector[1] <- baseURL
 
@@ -58,7 +58,7 @@ for(i in 1:length(urlVector)){
   
 }
 
-'clearing out price and location from proce_location'
+'Seperating variables price and location from price_location'
 #write.csv(outputTable, file = "D://file.csv")
 
 # 1. Price
